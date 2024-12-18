@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: socks-accounting-service
+server:
+  servlet:
+    context-path: /api
