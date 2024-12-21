@@ -4,10 +4,6 @@ import java.util.UUID;
 
 public final class Constants {
 
-    public static final UUID BLACK_COLOR_ID;
-    public static final UUID WHITE_COLOR_ID;
-    public static final UUID GREY_COLOR_ID;
-
     public static final UUID FIRST_SOCK_PAIR_ID;
     public static final UUID SECOND_SOCK_PAIR_ID;
     public static final UUID THIRD_SOCK_PAIR_ID;
@@ -20,11 +16,9 @@ public final class Constants {
     public static final int QUANTITY_SECOND;
     public static final int QUANTITY_THIRD;
 
-    static {
-        BLACK_COLOR_ID = UUID.randomUUID();
-        WHITE_COLOR_ID = UUID.randomUUID();
-        GREY_COLOR_ID = UUID.randomUUID();
+    public static final String MULTIPART_FILE_NAME;
 
+    static {
         FIRST_SOCK_PAIR_ID = UUID.randomUUID();
         SECOND_SOCK_PAIR_ID = UUID.randomUUID();
         THIRD_SOCK_PAIR_ID = UUID.randomUUID();
@@ -36,6 +30,8 @@ public final class Constants {
         QUANTITY_THIRD = 20;
         QUANTITY_SECOND = 15;
         QUANTITY_FIRST = 10;
+
+        MULTIPART_FILE_NAME = "exel";
     }
 
     private Constants() {
