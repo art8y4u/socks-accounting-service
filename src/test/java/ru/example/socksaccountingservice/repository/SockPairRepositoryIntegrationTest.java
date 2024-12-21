@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.example.socksaccountingservice.entity.SockPair;
 import ru.example.socksaccountingservice.util.DataUtils;
@@ -40,7 +39,6 @@ class SockPairRepositoryIntegrationTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("Тестирование сохранения в репозиторий.")
     void testSaveIntoRepository_whenSavingValidSockPair_thenSavedSuccessfully() {
 
