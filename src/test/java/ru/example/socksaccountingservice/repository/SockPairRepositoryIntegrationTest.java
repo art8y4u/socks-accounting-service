@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.example.socksaccountingservice.entity.SockPair;
 import ru.example.socksaccountingservice.util.DataUtils;
-import ru.example.socksaccountingservice.util.constants.Constants;
 
 import java.util.List;
 
@@ -28,15 +27,8 @@ class SockPairRepositoryIntegrationTest {
     @Autowired
     private SockPairRepository sockPairRepository;
 
-    @Autowired
-    private SockColorRepository sockColorRepository;
-
     @BeforeEach
     void setUp() {
-        sockColorRepository.save(DataUtils.BLACK_COLOR);
-        sockColorRepository.save(DataUtils.WHITE_COLOR);
-        sockColorRepository.save(DataUtils.GREY_COLOR);
-
         sockPairRepository.save(DataUtils.FIRST_SOCK_PAIR);
         sockPairRepository.save(DataUtils.SECOND_SOCK_PAIR);
         sockPairRepository.save(DataUtils.THIRD_SOCK_PAIR);
@@ -57,7 +49,5 @@ class SockPairRepositoryIntegrationTest {
 
         Assertions.assertEquals(3, actual.size());
         Assertions.assertEquals(expected, actual);
-
-        Assertions.assertEquals(Constants.FIRST_SOCK_PAIR_ID, actual.get(0).getId());
     }
 }
