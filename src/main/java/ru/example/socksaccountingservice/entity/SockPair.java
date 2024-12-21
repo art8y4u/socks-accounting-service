@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ru.example.socksaccountingservice.entity.enums.Color;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 
 /**
@@ -20,11 +22,14 @@ import java.util.UUID;
  */
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "socks")
+@Table(name = "socks",
+    schema = "socks_service",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"color", "cotton_percentage"})})
 public class SockPair {
 
     /**
@@ -37,6 +42,7 @@ public class SockPair {
     /**
      * Количество пар на складе.
      */
+    @Column(name = "quantity")
     private int quantity;
 
     /**
@@ -48,7 +54,7 @@ public class SockPair {
     /**
      * Цвет пары.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "color_id", nullable = false)
-    private SockColor sockColor;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "color")
+    private Color color;
 }
