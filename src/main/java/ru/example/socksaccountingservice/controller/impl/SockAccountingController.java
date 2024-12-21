@@ -17,7 +17,6 @@ import ru.example.socksaccountingservice.entity.SockPair;
 import ru.example.socksaccountingservice.mapper.SockAccountingMapper;
 import ru.example.socksaccountingservice.service.SockAccountingService;
 
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -85,7 +84,7 @@ public class SockAccountingController implements SockAccountingApi {
     }
 
     @Override
-    public ProcessedFileResponse registerFileIncome(MultipartFile file) throws IOException {
+    public ProcessedFileResponse registerFileIncome(MultipartFile file) {
         log.info("registerFileIncome() - start. fileName: {}", file.getOriginalFilename());
 
         final ProcessedFileInfo processedFileInfo = service.processFileIncome(file);

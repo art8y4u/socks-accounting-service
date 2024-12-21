@@ -20,14 +20,6 @@ public final class DataUtils {
 
     public static final ChangeParametersResponse CHANGE_PARAMETERS_RESPONSE;
 
-
-    public static final SockPair BUILD = SockPair.builder()
-        .id(Constants.SECOND_SOCK_PAIR_ID)
-        .cottonPercentage(Constants.COTTON_PERCENTAGE_80)
-        .quantity(Constants.QUANTITY_SECOND)
-        .color(Color.BLACK)
-        .build();
-
     static {
 
         FIRST_SOCK_PAIR = SockPair.builder()
