@@ -1,7 +1,15 @@
 spring:
   jpa:
-    show-sql: true
+    properties:
+      hibernate:
+        show-sql: true
+        format_sql: true
+        ddl-auto: create-drop
+        default_schema: socks_service
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   datasource:
-    url: jdbc:tc:postgresql:14.1:///test-db
+    url: jdbc:tc:postgresql:16.2:///test-db?TC_INITSCRIPT=db/init.sql
     username: test
     password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
