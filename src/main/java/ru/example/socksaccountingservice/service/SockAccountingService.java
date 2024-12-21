@@ -41,6 +41,7 @@ public class SockAccountingService {
      * @param quantity         количество поступивших носков
      * @return обновленный или созданный объект {@link SockPair}
      */
+    @Transactional
     public SockPair registerSockIncome(Color color, int cottonPercentage, int quantity) {
         log.debug("registerSockIncome() - start. params: color={}, cotton={}, quantity={}",
             color, cottonPercentage, quantity);
@@ -157,6 +158,7 @@ public class SockAccountingService {
      * @return {@link ProcessedFileInfo} о количестве обработанных строк и пропущенных записей
      * @throws RuntimeException если возникла ошибка при обработке файла
      */
+    @Transactional
     public ProcessedFileInfo processFileIncome(MultipartFile file) {
         log.debug("processFileIncome() - start. fileName: {}", file.getOriginalFilename());
 
