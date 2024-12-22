@@ -1,5 +1,11 @@
 package ru.example.socksaccountingservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +32,8 @@ import java.util.UUID;
  * API, предоставляющий операции по учету носков.
  */
 @RequestMapping("/socks")
+@Tag(name = "SockAccountingApi",
+    description = "API контроллера для обработки запросов, связанных с учетом носков")
 public interface SockAccountingApi {
 
     /**
@@ -38,8 +46,15 @@ public interface SockAccountingApi {
      * @param request объект запроса {@link ChangeParametersRequest}
      * @return ответ об успешном изменении кол-ва {@link ChangeQuantityResponse}
      */
+    @Operation(operationId = "registerSockIncome",
+        summary = "Регистрация прихода носков")
+    @ApiResponse(responseCode = "200", description = "Ответ об успешной регистрации прихода",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = ChangeQuantityResponse.class)))
     @PostMapping("/income")
     ResponseEntity<ChangeQuantityResponse> registerSockIncome(
+        @Parameter(description = "Модель запроса с информацией об изменении кол-ва")
         @Valid @RequestBody ChangeParametersRequest request);
 
     /**
@@ -50,10 +65,17 @@ public interface SockAccountingApi {
      * Уменьшает количество носков на складе, если их хватает.
      *
      * @param request объект запроса {@link ChangeParametersRequest}
-     * @return ответ об успешном кол-ва {@link ChangeQuantityResponse}
+     * @return ответ об успешном изменении кол-ва {@link ChangeQuantityResponse}
      */
+    @Operation(operationId = "registerSockOutcome",
+        summary = "Регистрация отпуска носков")
+    @ApiResponse(responseCode = "200", description = "Ответ об успешной регистрации отпуска",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = ChangeQuantityResponse.class)))
     @PostMapping("/outcome")
     ResponseEntity<ChangeQuantityResponse> registerSockOutcome(
+        @Parameter(description = "Модель запроса с информацией об изменении кол-ва")
         @Valid @RequestBody ChangeParametersRequest request);
 
     /**
@@ -64,9 +86,20 @@ public interface SockAccountingApi {
      * @param request объект запроса {@link ChangeParametersRequest}
      * @return ответ с новыми характеристиками сущности {@link ChangeParametersResponse}
      */
+    @Operation(operationId = "changeSockPairParameters",
+        summary = "Изменение параметров существующих носков")
+    @ApiResponse(responseCode = "200", description = "Ответ об успешном изменении параметров",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = ChangeParametersResponse.class)))
     @PutMapping("/{id}")
     ResponseEntity<ChangeParametersResponse> changeSockPairParameters(
-        @PathVariable("id") UUID id, @Valid @RequestBody ChangeParametersRequest request);
+        @Parameter(description = "Уникальный идентификатор целевой сущности")
+        @PathVariable("id")
+        UUID id,
+        @Parameter(description = "Модель запроса с информацией об изменении параметров")
+        @Valid @RequestBody
+        ChangeParametersRequest request);
 
     /**
      * Получение общего количества носков с фильтрацией:
@@ -81,8 +114,15 @@ public interface SockAccountingApi {
      * @param request запрос с аттрибутами на фильтрацию {@link FilteredQuantityRequest}
      * @return ответ с доступным кол-вом после фильтрации {@link FilteredQuantityResponse}
      */
+    @Operation(operationId = "getFilteredQuantity",
+        summary = "Получение общего кол-ва с фильтрацией")
+    @ApiResponse(responseCode = "200", description = "Ответ об успешном получении общего кол-ва после фильтрации",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = FilteredQuantityResponse.class)))
     @GetMapping
     ResponseEntity<FilteredQuantityResponse> getFilteredQuantity(
+        @Parameter(description = "Модель запроса с параметрами фильтрации")
         @Valid @ModelAttribute FilteredQuantityRequest request);
 
     /**
@@ -96,6 +136,14 @@ public interface SockAccountingApi {
      * @return объект статистики обработки {@link ProcessedFileInfo}
      * @throws IOException ошибка при чтении и обработке файла
      */
+    @Operation(operationId = "registerFileIncome",
+        summary = "Регистрация прихода из Excel файла")
+    @ApiResponse(responseCode = "200", description = "Успешный ответ со статистикой обработки",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = ProcessedFileResponse.class)))
     @PostMapping("/batch")
-    ProcessedFileResponse registerFileIncome(@RequestParam(name = "exel") MultipartFile file) throws IOException;
+    ProcessedFileResponse registerFileIncome(
+        @Parameter(description = "Файл с данными прихода")
+        @RequestParam(name = "exel") MultipartFile file) throws IOException;
 }
