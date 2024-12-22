@@ -30,6 +30,7 @@ val lombokVersion = "1.18.36"
 val mapstructVersion = "1.6.3"
 val mapstructLombokBindingVersion = "0.2.0"
 val testcontainersVersion = "1.20.4"
+val openApiVersion = "1.8.0"
 
 dependencies {
 
@@ -52,6 +53,9 @@ dependencies {
 
     // MapStruct
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
+
+    // OpenAPI
+    implementation("org.springdoc:springdoc-openapi-ui:$openApiVersion")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
