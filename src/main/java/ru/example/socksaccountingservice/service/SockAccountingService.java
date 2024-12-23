@@ -12,6 +12,9 @@ import ru.example.socksaccountingservice.dto.ProcessedFileInfo;
 import ru.example.socksaccountingservice.entity.SockPair;
 import ru.example.socksaccountingservice.entity.enums.Color;
 import ru.example.socksaccountingservice.entity.enums.ComparisonOperator;
+import ru.example.socksaccountingservice.exception.impl.InternalException;
+import ru.example.socksaccountingservice.exception.impl.InvalidArgumentException;
+import ru.example.socksaccountingservice.exception.impl.NotFoundException;
 import ru.example.socksaccountingservice.repository.SockPairRepository;
 
 import java.io.IOException;
@@ -80,7 +83,7 @@ public class SockAccountingService {
             .orElseThrow(() -> {
                 log.error("registerSockOutcome() - error. params: color: {}, cotton: {}, quantity: {}",
                     color, cottonPercentage, quantity);
-                return new RuntimeException("Not found exception");
+                return new NotFoundException("Not found exception");
             });
 
         final int currentQuantity = sockPair.getQuantity();
@@ -88,7 +91,7 @@ public class SockAccountingService {
         if (currentQuantity < quantity) {
             log.error("registerSockOutcome() - error. Not enough quantity. color: {}, cotton: {}, quantity: {}",
                 color, cottonPercentage, quantity);
-            throw new RuntimeException();
+            throw new InvalidArgumentException("There is not enough items available");
         }
 
         sockPair.setQuantity(currentQuantity - quantity);
@@ -113,7 +116,7 @@ public class SockAccountingService {
         repository.findById(id)
             .orElseThrow(() -> {
                 log.error("changeSockPairParameters() - error. Not found with id: {}", id);
-                return new RuntimeException();
+                return new NotFoundException(String.format("Not found with id: %s", id));
             });
 
         final SockPair updated = repository.save(sockPair);
@@ -166,7 +169,6 @@ public class SockAccountingService {
         List<SockPair> processedList = new ArrayList<>();
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
-
             for (Sheet sheet : workbook) {
                 for (Row row : sheet) {
                     numSkipped = processRow(row, processedList, numSkipped);
@@ -174,7 +176,7 @@ public class SockAccountingService {
             }
         } catch (IOException e) {
             log.error("processFileIncome() - error. fileName: {}", file.getOriginalFilename());
-            throw new RuntimeException(e);
+            throw new InternalException("Error while reading a file", e);
         }
 
         repository.saveAll(processedList);
