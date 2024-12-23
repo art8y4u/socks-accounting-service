@@ -1,11 +1,19 @@
 package ru.example.socksaccountingservice.service;
 
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+import ru.example.socksaccountingservice.dto.ProcessedFileInfo;
 import ru.example.socksaccountingservice.entity.SockPair;
 import ru.example.socksaccountingservice.entity.enums.Color;
 import ru.example.socksaccountingservice.entity.enums.ComparisonOperator;
@@ -13,6 +21,8 @@ import ru.example.socksaccountingservice.repository.SockPairRepository;
 import ru.example.socksaccountingservice.util.DataUtils;
 import ru.example.socksaccountingservice.util.constants.Constants;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -189,5 +199,40 @@ class SockAccountingServiceTest {
             ComparisonOperator.LESS_THAN, Constants.COTTON_PERCENTAGE_90);
 
         assertEquals(Constants.QUANTITY_FIRST + Constants.QUANTITY_SECOND, result);
+    }
+
+    @Test
+    void name() {
+        try (XSSFWorkbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            final XSSFSheet sheet = workbook.createSheet();
+
+            final XSSFRow firstRow = sheet.createRow(1);
+            final XSSFRow secondRow = sheet.createRow(2);
+
+            final XSSFCell cell = firstRow.createCell(0, CellType.STRING);
+            cell.setCellValue("BLACK");
+            final XSSFCell cell1 = firstRow.createCell(1, CellType.NUMERIC);
+            cell1.setCellValue(20);
+            final XSSFCell cell2 = firstRow.createCell(2, CellType.NUMERIC);
+            cell2.setCellValue(30);
+
+            final XSSFCell cell3 = secondRow.createCell(0, CellType.STRING);
+            cell3.setCellValue("WHITE");
+            final XSSFCell cell4 = secondRow.createCell(1, CellType.NUMERIC);
+            cell4.setCellValue("skipped");
+            final XSSFCell cell5 = secondRow.createCell(2, CellType.NUMERIC);
+            cell5.setCellValue(40);
+
+            workbook.write(outputStream);
+
+            final ProcessedFileInfo processedFileInfo =
+                service.processFileIncome(new MockMultipartFile("workbook", outputStream.toByteArray()));
+
+            Assertions.assertEquals(1, processedFileInfo.processedRows());
+            Assertions.assertEquals(1, processedFileInfo.rowsSkipped());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

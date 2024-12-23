@@ -217,7 +217,7 @@ public class SockAccountingService {
                 .cottonPercentage(cottonPercentage)
                 .quantity(quantity)
                 .build());
-        } catch (IllegalArgumentException | NoSuchElementException e) {
+        } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException e) {
             log.warn("processFileIncome() - warn. skippedRow: {}", row.getRowNum());
             numSkipped++;
         }
